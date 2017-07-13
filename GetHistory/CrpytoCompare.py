@@ -1,15 +1,9 @@
 import numpy as np
 import pandas as pd
-from scipy import stats
-from matplotlib import pyplot as plt
-from matplotlib.ticker import MaxNLocator
 from datetime import datetime
 import json
 from bs4 import BeautifulSoup
 import requests
-
-# define some custom colours
-grey = .6, .6, .6
 
 
 def timestamp2datetime(timestamp):
@@ -22,7 +16,7 @@ def date2timestamp(date):
     return datetime.strptime(date, '%Y-%m-%d').timestamp()
 
 
-def fetchCryptoClose(fsym, tsym, exchange):
+def fetch_crypto_close(fsym, tsym, exchange):
     # function fetches the close-price time-series from cryptocompare.com
     # it may ignore near-zero pricing
     cols = ['date', 'timestamp', exchange]
@@ -60,3 +54,14 @@ def fetchCryptoClose(fsym, tsym, exchange):
             data = pd.concat([df, data], axis=0)
     data.drop("timestamp", axis=1, inplace=True)
     return data  # DataFrame
+
+
+def fetch_top_exchanges(fsym, tsym):
+    pass
+
+
+def fetch_liquidity(fsym, tsym, exchange="All"):
+    pass
+
+
+
