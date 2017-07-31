@@ -26,6 +26,7 @@ class BaseClient(object):
         """
         Make a GET request.
         """
+        return "test"
         return self._request(requests.get, *args, **kwargs)
 
     def _post(self, *args, **kwargs):
