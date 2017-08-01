@@ -41,6 +41,9 @@ class Yobit(object):
 
         return False
 
+    def getTickers(self):
+        self.query(self, 'info')['pairs']
+
 
     def returnOrderBook(self, ticker):
         return self.query('depth', [ticker])[ticker]
