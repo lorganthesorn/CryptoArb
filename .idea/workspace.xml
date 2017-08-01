@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1d9ddb0e-6ae5-412d-9828-71378435c342" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GetHistory/HistoryData/histominute/BTC_USD.h5" afterPath="$PROJECT_DIR$/GetHistory/HistoryData/histominute/BTC_USD.h5" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/CryptoArb.iml" afterPath="$PROJECT_DIR$/.idea/CryptoArb.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+    <list default="true" id="1d9ddb0e-6ae5-412d-9828-71378435c342" name="Default" comment="Changes">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/GetHistory/HistoryData/histominute/ETH_USD.h5" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/GetHistory/HistoryData/histominute/Workings.xlsx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/GetHistory/HistoryData/histominute/BTC_USD.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/GetHistory/HistoryData/histominute/ETH_USD.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Markets/Poloniex.py" afterPath="$PROJECT_DIR$/Markets/Poloniex.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Markets/YoBit.py" afterPath="$PROJECT_DIR$/Markets/YoBit.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Monitors/calculator.py" afterPath="$PROJECT_DIR$/Monitors/calculator.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Strategies/Follower.py" afterPath="$PROJECT_DIR$/Strategies/Follower.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -548,7 +545,14 @@
       <option name="project" value="LOCAL" />
       <updated>1501604718641</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Changes">
+      <created>1501623795786</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1501623795787</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -633,6 +637,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1353">
           <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -654,6 +659,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3564">
           <caret line="112" column="28" lean-forward="false" selection-start-line="112" selection-start-column="28" selection-end-line="112" selection-end-column="28" />
+          <folding>
+            <element signature="e#301#312#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -661,6 +669,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
           <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -683,6 +692,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1032">
           <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -705,6 +715,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="888">
           <caret line="43" column="0" lean-forward="true" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -742,6 +753,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="33">
           <caret line="112" column="28" lean-forward="false" selection-start-line="112" selection-start-column="28" selection-end-line="112" selection-end-column="28" />
+          <folding>
+            <element signature="e#301#312#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -749,6 +763,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
           <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -763,6 +778,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="861">
           <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -799,6 +815,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1032">
           <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -821,6 +838,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="888">
           <caret line="43" column="0" lean-forward="true" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -845,6 +863,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1032">
           <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -861,6 +880,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
