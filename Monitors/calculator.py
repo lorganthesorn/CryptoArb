@@ -12,7 +12,7 @@ yPairs.sort()
 
 for yo in yPairs:
     if 'dash_btc' in yo:
-        print(y.get_depth([yo])[yo])
+        print(y.returnOrderBook(yo))
 
 for po in pPairs:
     if 'BTC_DASH' in po:
