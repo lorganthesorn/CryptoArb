@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1d9ddb0e-6ae5-412d-9828-71378435c342" name="Default" comment="Changes">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/GetHistory/HistoryData/histominute/ETH_USD.h5" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/GetHistory/HistoryData/histominute/Workings.xlsx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/GetHistory/HistoryData/histominute/BTC_USD.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/GetHistory/HistoryData/histominute/ETH_USD.csv" />
+    <list default="true" id="1d9ddb0e-6ae5-412d-9828-71378435c342" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -552,7 +548,14 @@
       <option name="project" value="LOCAL" />
       <updated>1501623795787</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Changes">
+      <created>1501623877021</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1501623877021</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -571,8 +574,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-13" y="-13" width="2762" height="1770" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23225075" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23225075" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19762062" sideWeight="0.50151056" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980832" sideWeight="0.49848944" order="7" side_tool="false" content_ui="tabs" />
