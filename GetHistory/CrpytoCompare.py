@@ -25,6 +25,7 @@ def find_history_file(fsym, tsym, exchange, granularity):
 def sort_remove_duplicates(data):
     data = data.reset_index().drop_duplicates(subset='date', keep='last').set_index('date')
     data = data.sort_index()
+    data = data.convert_objects(convert_numeric=True)
     return data
 
 

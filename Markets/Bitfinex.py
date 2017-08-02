@@ -27,7 +27,7 @@ class TradeClient:
     Authenticated client for trading through Bitfinex API
     """
 
-    def __init__(self, key, secret):
+    def __init__(self, key='PAOWjYs0EFF6Q62bRXNVpEtSUdzQD9jzGVNS3phno5A', secret='NKuqha2lIXqptSzAnf1I0uScB5ogOqZyhdWLVa7jKfD'):
         self.URL = "{0:s}://{1:s}/{2:s}".format(PROTOCOL, HOST, VERSION)
         self.KEY = key
         self.SECRET = secret
@@ -56,10 +56,12 @@ class TradeClient:
     def place_order(self, amount, price, side, ord_type, symbol='btcusd', exchange='bitfinex'):
         """
         Submit a new order.
-        :param amount:
-        :param price:
+        :param amount: volume
+        :param price: price
         :param side:
-        :param ord_type:
+        :param ord_type: Either “market” / “limit” / “stop” / “trailing-stop” / “fill-or-kill” / “exchange market” /
+                        “exchange limit” / “exchange stop” / “exchange trailing-stop” / “exchange fill-or-kill”.
+                        (type starting by “exchange ” are exchange orders, others are margin trading orders)
         :param symbol:
         :param exchange:
         :return:
