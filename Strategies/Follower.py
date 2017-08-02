@@ -1,12 +1,14 @@
 import importlib
 import time
 import threading
+import pandas as pd
 from GetHistory import CrpytoCompare
 
 
 class Follower(object):
     def __init__(self, ma_period=30, sleep_secs=10, hist_sleep_secs=60, leader='BTC', follower='ETH', quote='USD',
-                 leadExchange='Bitfinex', followExchange='Bitfinex'):
+                 leadExchange='Bitfinex', followExchange='Bitfinex', std_deviations=7, mins_to_wait=5):
+        # Settings
         self.leader = leader
         self.follower = follower
         self.quote = quote
@@ -16,15 +18,20 @@ class Follower(object):
         followerModule = importlib.import_module("Markets." + followExchange)
         self.leaderAPI = leaderModule.Client()
         self.followerAPI = followerModule.Client()
-        self.leaderHistory = None
-        self.followerHistory = None
-        self.livePrice = {'leader': {'bid': 0, 'ask': 0}, 'follower': {'bid': 0, 'ask': 0}}
         self.ma_period = ma_period
-        self.leaderMA = None
-        self.followerMA = None
         self.sleep_secs = sleep_secs
         self.hist_sleep_secs = hist_sleep_secs
+        self.std_deviations = std_deviations
+        self.mins_to_wait = mins_to_wait
 
+        # Data
+        self.leaderHistory = pd.DataFrame()
+        self.followerHistory = pd.DataFrame()
+        self.livePrice = {'leader': {'bid': 0, 'ask': 0}, 'follower': {'bid': 0, 'ask': 0}}
+        self.current_diff = 0
+        self.std_dev = 0
+
+        # Actions
         self.start_history_thread()
         self.start_live_thread()
         self.run_loop()
@@ -32,18 +39,14 @@ class Follower(object):
     def get_history(self, base, quote, exchange):
         return CrpytoCompare.fetch_crypto_close(base, quote, exchange)
 
-    def get_moving_average(self, df, periods):
-        return df.rolling(window=periods).mean()
-
     def refresh_ma(self):
-        self.leaderMA = self.get_moving_average(self.leaderHistory, self.ma_period)
-        self.followerMA = self.get_moving_average(self.followerHistory, self.ma_period)
-
-        df = self.leaderHistory / self.followerHistory
-        df['ma'] =
-
-
-
+        df = pd.DataFrame(columns=['ratio', 'ma', 'diff'])
+        df['ratio'] = self.leaderHistory / self.followerHistory
+        #df['ma'] = df['ratio'].rolling(window=self.ma_period).mean()
+        #df['diff'] = df['ratio'] - df['diff']
+        self.std_dev = df['ratio'].std()
+        self.current_ma = df['ma'][-1]
+        self.current_diff = df['diff'][-1]
 
     def refresh_history(self):
         self.leaderHistory = self.get_history(self.leader, self.quote, self.leadExchange)
@@ -80,7 +83,8 @@ class Follower(object):
         #in the case where ratio is trending may be required
         pass
 
-    def calc_opp(self):
+    def trade_trigger(self):
+
         pass
 
     def execute(self):
@@ -91,13 +95,13 @@ class Follower(object):
         while l < 10:
             l += 1
             time.sleep(10)
-            print('Leader MA: %.4f' % self.leaderMA.iloc[-1][-1])
-            print('Follower MA: %.4f' % self.followerMA.iloc[-1][-1])
+            #print('Leader MA: %.4f' % self.leaderMA.iloc[-1][-1])
+            #print('Follower MA: %.4f' % self.followerMA.iloc[-1][-1])
 
             print('Leader ask: %.4f' % self.livePrice['leader']['ask'])
             print('Follower ask: %.4f' % self.livePrice['follower']['ask'])
 
-            print('/n========------Next Loop------========')
+            print('\n========------Next Loop------========')
 
 
 if __name__ == '__main__':

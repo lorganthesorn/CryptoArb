@@ -89,7 +89,7 @@ class Poloniex:
 
         return self.api('public', params)
 
-    def returnTicker(self):
+    def getTickers(self):
         return self._public("returnTicker")
 
     def return24hVolume(self):
