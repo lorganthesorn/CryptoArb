@@ -27,7 +27,7 @@ class TradeClient:
     Authenticated client for trading through Bitfinex API
     """
 
-    def __init__(self, key='PAOWjYs0EFF6Q62bRXNVpEtSUdzQD9jzGVNS3phno5A', secret='NKuqha2lIXqptSzAnf1I0uScB5ogOqZyhdWLVa7jKfD'):
+    def __init__(self, key, secret):
         self.URL = "{0:s}://{1:s}/{2:s}".format(PROTOCOL, HOST, VERSION)
         self.KEY = key
         self.SECRET = secret
