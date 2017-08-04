@@ -8,6 +8,7 @@ from GetHistory import CrpytoCompare
 from datetime import datetime, timedelta
 from Markets import APIKeys
 
+
 class Follower(object):
     def __init__(self, live_sleep_secs=10, hist_sleep_secs=60, leader='BTC', follower='ETH', quote='USD',
                  lead_exchange='Bitfinex', follow_exchange='Bitfinex', std_deviations=7, mins_to_wait=5,
