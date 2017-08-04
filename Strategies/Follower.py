@@ -4,6 +4,7 @@ import threading
 import pandas as pd
 import os
 from requests import exceptions
+from json import decoder
 from GetHistory import CrpytoCompare
 from datetime import datetime, timedelta
 from Markets import APIKeys
@@ -118,6 +119,8 @@ class Follower(object):
                               'follower': {'bid': follower_response['bid'], 'ask': follower_response['ask']}}
         except exceptions.ReadTimeout:
             print('ReadTimeout in live price feed: %s' % datetime.today())
+        except decoder.JSONDecodeError:
+            print('JSONDecodeError in live price feed: %s' % datetime.today())
 
     def start_live_thread(self):
         t = threading.Thread(target=self.live_worker)
@@ -157,4 +160,4 @@ class Follower(object):
 
 
 if __name__ == '__main__':
-    f = Follower(std_deviations=7)
+    f = Follower(history_days=1)
