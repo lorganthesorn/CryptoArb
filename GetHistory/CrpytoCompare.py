@@ -31,6 +31,7 @@ def sort_remove_duplicates(data):
 
 def save_history_file(fsym, tsym, exchange, granularity, data):
     path = os.path.dirname(__file__) + '\\HistoryData\\' + granularity + '\\' + fsym + '_' + tsym
+    #path = 'C:\\Users\\caspreckley\\Desktop\\' + fsym + '_' + tsym
     store = pd.HDFStore(path + '.h5')
     store['data'] = data
     store.close()
@@ -76,7 +77,7 @@ def fetch_crypto_close(fsym, tsym, exchange, granularity='histominute', data=Non
                 tmp.append(y)
             if(np.sum(tmp[-4::]) > 0):  # remove for near zero vals
                 tmp = np.array(tmp)
-                tmp = tmp[[0,1,4]]  # filter solely for close prices
+                tmp = tmp[[0,1,5]]  # filter solely for close prices
                 df.loc[len(df)] = np.array(tmp)
         # ensure a correct date format
         df.index = pd.to_datetime(df.date, format="%Y-%m-%d %H:%M:%S")
@@ -99,5 +100,7 @@ def fetch_top_exchanges(fsym, tsym):
 def fetch_liquidity(fsym, tsym, exchange="All"):
     pass
 
+if __name__ == '__main__':
+    fetch_crypto_close('BTC', 'USD', 'Bitfinex', granularity='histominute', data=None)
 
 
