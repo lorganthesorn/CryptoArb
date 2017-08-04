@@ -2,8 +2,10 @@ import importlib
 import time
 import threading
 import pandas as pd
+import os
 from GetHistory import CrpytoCompare
 from datetime import datetime
+from Markets import APIKeys
 
 class Follower(object):
     def __init__(self, live_sleep_secs=10, hist_sleep_secs=60, leader='BTC', follower='ETH', quote='USD',
@@ -17,10 +19,10 @@ class Follower(object):
         self.follow_exchange = follow_exchange
         leader_module = importlib.import_module("Markets." + lead_exchange)
         follower_module = importlib.import_module("Markets." + follow_exchange)
+        follower_keys = getattr(APIKeys, follow_exchange)
         self.leader_public = leader_module.Client()
         self.follower_public = follower_module.Client()
-        #self.leader_trade = leader_module.TradeClient()
-        self.follower_trade = follower_module.TradeClient()
+        self.follower_trade = follower_module.TradeClient(key=follower_keys['key'], secret=follower_keys['secret'])
         self.live_sleep_secs = live_sleep_secs
         self.hist_sleep_secs = hist_sleep_secs
         self.std_deviations = std_deviations
@@ -28,6 +30,8 @@ class Follower(object):
         self.order_size = order_size
         self.close_order = {'buy': 'sell', 'sell': 'buy'}
         self.print = True
+        self.log_file = open(os.path.dirname(__file__) + '/Log/FollowerLog.txt', 'a')
+        self.open_order = False
 
         # Data
         self.history = pd.DataFrame
@@ -40,6 +44,7 @@ class Follower(object):
         # Actions
         self.start_history_thread()
         self.start_live_thread()
+        self.start_log_thread()
         self.run_loop()
 
     def get_history(self, base, quote, exchange):
@@ -71,6 +76,23 @@ class Follower(object):
             self.refresh_target()
             time.sleep(self.hist_sleep_secs)
 
+    def start_log_thread(self):
+        t = threading.Thread(target=self.write_to_log)
+        t.daemon = True
+        t.start()
+
+    def write_to_log(self):
+        while 1:
+            if self.history_loaded:
+                self.log_file.write('\n%s,%s,%s,%s,%s,%s' % (datetime.today(), self.livePrice['leader']['ask'],
+                                                      self.livePrice['follower']['ask'], self.target_delta,
+                                                      self.current_delta, self.open_order))
+            try:
+                self.log_file.flush()
+            except PermissionError:
+                print('PermissionError')
+            time.sleep(10)
+
     def start_history_thread(self):
         t = threading.Thread(target=self.history_worker)
         t.daemon = True
@@ -79,7 +101,11 @@ class Follower(object):
     def live_worker(self):
         while 1:
             if self.history_loaded:
-                self.get_live_price()
+                try:
+                    self.get_live_price()
+                except e: #catch time out exception
+                    print('Error in live prices: %s' % e)
+                    pass
                 self.refresh_current()
                 self.trade_trigger()
                 time.sleep(self.live_sleep_secs)
@@ -100,30 +126,22 @@ class Follower(object):
             self.execute(['buy', 'sell'])
         elif self.target_delta <= abs(self.current_delta) and self.current_delta < 0:
             self.execute(['sell', 'buy'])
-        elif datetime.today().minute % 10 == 0 and self.print == True:
-            print('%s - current: %.4f, target: %.4f' % (datetime.today(), self.current_delta, self.target_delta))
-            self.print = False
-        elif datetime.today().minute % 11 == 0 and self.print == False:
-            self.print = True
 
     def execute(self, order):
         time_stamp = int(datetime.today().timestamp())
+        self.open_order = True
         print(self.follower_trade.place_order(self.order_size, '1', order[0], 'market', self.follower + self.quote))
         time.sleep(self.mins_to_wait*60)
+        self.open_order = False
         print(self.follower_trade.place_order(self.order_size, '1', order[1], 'market', self.follower + self.quote))
         print(self.calc_pnl(time_stamp))
 
     def run_loop(self):
         while 1:
-            pass
-        #l = 1
-        #while l < 3:
-        #    l += 1
-        #    time.sleep(10)
-        #    print('Leader: %.4f, %.4f' % (self.livePrice['leader']['ask'], self.livePrice['leader']['bid']))
-        #    print('Follower: %.4f, %.4f' % (self.livePrice['follower']['ask'], self.livePrice['follower']['bid']))
-        #    print('CurrentDelta: %.4f, TargetDelta: %.4f' % (self.current_delta, self.target_delta))
-        #    print('\n========------Next Loop------========')
+            print('Follower strategy running - type "close" to exit')
+            if input() == 'close':
+                self.log_file.close()
+                return
 
     def calc_pnl(self, time_stamp):
         trades = self.follower_trade.past_trades(time_stamp, self.follower + self.quote)
@@ -137,12 +155,12 @@ class Follower(object):
 
 from Markets import Bitfinex
 
-
 def test_api(side):
-    trade = Bitfinex.TradeClient()
+    #trade = Bitfinex.TradeClient()
     #print(trade.place_order('0.01', '1', 'buy, 'market', 'ethusd'))
-    print(trade.active_positions())
+    #print(trade.active_positions())
     #print(trade.place_order('0.01', '200', 'sell', 'stop', 'ethusd'))
+    # for testing - self.execute(['buy', 'sell'])
 
     x = trade.past_trades(1501700966, 'ethusd')
     print(x['fee_amount'])
@@ -161,8 +179,3 @@ def calc_pnl(time_stamp):
 
 if __name__ == '__main__':
     f = Follower(std_deviations=7)
-    #test_api('sell')
-    #print(calc_pnl(1501700966))
-
-
-
