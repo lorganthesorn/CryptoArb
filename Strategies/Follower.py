@@ -13,7 +13,7 @@ from Markets import APIKeys
 class Follower(object):
     def __init__(self, live_sleep_secs=10, hist_sleep_secs=60, leader='BTC', follower='ETH', quote='USD',
                  lead_exchange='Bitfinex', follow_exchange='Bitfinex', std_deviations=7, mins_to_wait=5,
-                 order_size='0.01', history_days=5):
+                 order_size='0.01', history_days=5, stop_loss='0.75'):
         # Settings
         self.leader = leader
         self.follower = follower
@@ -33,9 +33,11 @@ class Follower(object):
         self.order_size = order_size
         self.close_order = {'buy': 'sell', 'sell': 'buy'}
         self.print = True
-        self.log_file = open(os.path.dirname(__file__) + '/Log/FollowerLog.txt', 'a')
+        self.log_file = open(os.path.dirname(__file__) + '/Log/FollowerLog'+follower+'.txt', 'a')
         self.open_order = False
         self.start_date = datetime.today() - timedelta(days=history_days)
+        self.stop_loss = stop_loss
+        self.last_trade_time = datetime.today().timestamp()
 
         # Data
         self.history = pd.DataFrame
@@ -55,8 +57,8 @@ class Follower(object):
         return CrpytoCompare.fetch_crypto_close(base, quote, exchange)
 
     def refresh_target(self):
-        self.history['ratio'] = self.history.leader[self.start_date:datetime.today()] / \
-                                self.history.follower[self.start_date:datetime.today()]
+        self.history['ratio'] = self.history.leader[self.start_date: datetime.today()] / \
+                                self.history.follower[self.start_date: datetime.today()]
         self.history['delta'] = self.history.ratio.diff()
         self.target_delta = self.history['delta'].std() * self.std_deviations
         self.last_ratio = self.history['ratio'][-2]
@@ -127,20 +129,32 @@ class Follower(object):
         t.daemon = True
         t.start()
 
+    def get_active_positions(self):
+        try:
+            return len(self.follower_trade.active_positions())
+        except decoder.JSONDecodeError:
+            print('JSONDecode error in active order check %s' % datetime.today())
+            return 1
+
     def trade_trigger(self):
+        if self.get_active_positions() != 0:
+            return
+        elif self.open_order:
+            self.open_order = False
+            print(self.calc_pnl())
         if self.target_delta <= abs(self.current_delta) and self.current_delta > 0:
             self.execute(['buy', 'sell'])
         elif self.target_delta <= abs(self.current_delta) and self.current_delta < 0:
             self.execute(['sell', 'buy'])
 
     def execute(self, order):
-        time_stamp = int(datetime.today().timestamp())
-        self.open_order = True
+        self.last_trade_time = int(datetime.today().timestamp())
         print(self.follower_trade.place_order(self.order_size, '1', order[0], 'market', self.follower + self.quote))
-        time.sleep(self.mins_to_wait*60)
-        self.open_order = False
-        print(self.follower_trade.place_order(self.order_size, '1', order[1], 'market', self.follower + self.quote))
-        print(self.calc_pnl(time_stamp))
+        print(self.follower_trade.place_order(self.order_size, self.stop_loss, order[1], 'trailing-stop', self.follower + self.quote))
+        self.open_order = True
+        #time.sleep(self.mins_to_wait*60)
+        #self.open_order = False
+        #print(self.follower_trade.place_order(self.order_size, '1', order[1], 'market', self.follower + self.quote))
 
     def run_loop(self):
         while 1:
@@ -149,8 +163,8 @@ class Follower(object):
                 self.log_file.close()
                 return
 
-    def calc_pnl(self, time_stamp):
-        trades = self.follower_trade.past_trades(time_stamp, self.follower + self.quote)
+    def calc_pnl(self):
+        trades = self.follower_trade.past_trades(self.last_trade_time, self.follower + self.quote)[-2:]
         fee, pnl = 0, 0
         buy_sell = {'Buy': -1, 'Sell': 1}
         for t in trades:
@@ -160,4 +174,4 @@ class Follower(object):
 
 
 if __name__ == '__main__':
-    f = Follower(history_days=1)
+    f = Follower(history_days=2, follower='XMR', order_size='0.1')
