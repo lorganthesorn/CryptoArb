@@ -165,6 +165,21 @@ def get_coins_by_marketcap(size=50e6):
     return list(p.Ticker)
 
 
+def get_top_pairs(ticker):
+    url = "https://min-api.cryptocompare.com/data/top/pairs?fsym="+ticker
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+    dic = json.loads(soup.prettify())
+    data = dic['Data']
+    p = []
+    for i in range(len(data)):
+        p.append(data[i]['toSymbol'])
+
+    return p
+
+
+
+
 def fetch_liquidity(fsym, tsym, exchange="All"):
     pass
 
@@ -174,7 +189,7 @@ if __name__ == '__main__':
     #print([data.keys()])
     #for i in data.keys():
     #    print('%s: %.f' % (i, data[i]))
-    get_coins_by_marketcap()
+    print(get_top_pairs('BTC'))
 
 
 
