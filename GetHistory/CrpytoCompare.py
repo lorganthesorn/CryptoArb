@@ -139,7 +139,7 @@ def fetch_top_exchanges(fsym, tsym):
     pass
 
 
-def getTopExchanges(fsym, tsym, limit='10'):
+def get_top_exchanges(fsym, tsym, limit='10'):
     url = "https://min-api.cryptocompare.com/data/top/exchanges?fsym=" + fsym + \
               "&tsym=" + tsym + "&limit=" + limit
     response = requests.get(url)
@@ -149,15 +149,32 @@ def getTopExchanges(fsym, tsym, limit='10'):
     return exchanges
 
 
+def get_coins_by_marketcap(size=50e6):
+    url = "https://api.coinmarketcap.com/v1/ticker/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+    dic = json.loads(soup.prettify())
+
+    df = pd.DataFrame(columns=["Ticker", "MarketCap"])
+    for i in range(len(dic)):
+        df.loc[len(df)] = [dic[i]['symbol'], dic[i]['market_cap_usd']]
+
+    df.sort_values(by=['MarketCap'])
+    df.MarketCap = pd.to_numeric(df.MarketCap)
+    p = df[df.MarketCap > size]
+    return list(p.Ticker)
+
+
 def fetch_liquidity(fsym, tsym, exchange="All"):
     pass
 
 if __name__ == '__main__':
     #fetch_crypto_close('BTC', 'USD', 'Bitfinex', granularity='histominute', data=None)
-    data = getTopExchanges('BTC', 'USD', '10')
-    print([data.keys()])
-    for i in data.keys():
-        print('%s: %.f' % (i, data[i]))
+    #data = getTopExchanges('BTC', 'USD', '10')
+    #print([data.keys()])
+    #for i in data.keys():
+    #    print('%s: %.f' % (i, data[i]))
+    get_coins_by_marketcap()
 
 
 
