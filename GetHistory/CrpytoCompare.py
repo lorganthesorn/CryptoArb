@@ -18,7 +18,7 @@ def date2timestamp(date):
 
 
 def find_history_file(fsym, tsym, exchange, granularity):
-    f = os.path.dirname(__file__) + '\\HistoryData\\' + granularity + '\\' + fsym + '_' + tsym + '.h5'
+    f = os.path.dirname(__file__) + '\\HistoryData\\' + granularity + '\\' + exchange + fsym + '_' + tsym + '.h5'
     return pd.read_hdf(f.strip('.'), 'data')
 
 
@@ -63,11 +63,11 @@ def fetch_crypto_close(fsym, tsym, exchange, granularity='histominute', data=Non
         df = pd.DataFrame(columns=cols)
         url = "https://min-api.cryptocompare.com/data/"+granularity+"?fsym=" + fsym + \
               "&tsym=" + tsym + "&toTs=" + str(int(curr_timestamp)) + "&limit="+str(mins)+"&e=" + exchange
-        #print(url)
+        print(url)
         response = requests.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
         dic = json.loads(soup.prettify())
-        for i in range(1, mins+1):
+        for i in range(1, mins):
             tmp = []
             for e in enumerate(lst):
                 x = e[0]
@@ -82,7 +82,10 @@ def fetch_crypto_close(fsym, tsym, exchange, granularity='histominute', data=Non
         # ensure a correct date format
         df.index = pd.to_datetime(df.date, format="%Y-%m-%d %H:%M:%S")
         df.drop('date', axis=1, inplace=True)
-        curr_timestamp = date2timestamp(df.index[0])
+        try:
+            curr_timestamp = date2timestamp(df.index[0])
+        except IndexError:
+            pass
         if j == 0 and data is None:
             data = df.copy()
         else:
@@ -93,7 +96,7 @@ def fetch_crypto_close(fsym, tsym, exchange, granularity='histominute', data=Non
     return data # DataFrame
 
 
-def crypto_close(fsym, tsym, exchange, granularity='histominute'):
+def crypto_close(fsym, tsym, exchange='CCAGG', granularity='histominute'):
     # function fetches the close-price time-series from cryptocompare.com
     # it may ignore near-zero pricing
     cols = ['date', 'timestamp', exchange]
@@ -135,10 +138,6 @@ def crypto_close(fsym, tsym, exchange, granularity='histominute'):
     return data # DataFrame
 
 
-def fetch_top_exchanges(fsym, tsym):
-    pass
-
-
 def get_top_exchanges(fsym, tsym, limit='10'):
     url = "https://min-api.cryptocompare.com/data/top/exchanges?fsym=" + fsym + \
               "&tsym=" + tsym + "&limit=" + limit
@@ -165,8 +164,8 @@ def get_coins_by_marketcap(size=50e6):
     return list(p.Ticker)
 
 
-def get_top_pairs(ticker):
-    url = "https://min-api.cryptocompare.com/data/top/pairs?fsym="+ticker
+def get_top_pairs(ticker, limit):
+    url = "https://min-api.cryptocompare.com/data/top/pairs?fsym="+ticker+"&limit="+limit
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
     dic = json.loads(soup.prettify())
@@ -178,6 +177,28 @@ def get_top_pairs(ticker):
     return p
 
 
+def aggregate_frames(granularity, exchange):
+    path = os.getcwd() + '\\GetHistory\\HistoryData\\' + granularity + '\\'
+    f = [i for i in os.listdir(path) if i[-1:] == '5']
+    for j in range(len(f)):
+        if j == 0:
+            df = pd.read_hdf(path + f[j], 'data')
+        else:
+            df = pd.concat([df, pd.read_hdf(path + f[j], 'data')], axis=1)#, join='inner'
+    df.columns = [n.strip('.h5') for n in f]
+
+    return df
+
+
+def get_exchange_history(exchange, granularity='histohour', min_market_cap=10**6, ):
+    c = get_coins_by_marketcap(min_market_cap)
+    for i in c[1:]:
+        try:
+            print(i)
+            data = crypto_close(i, 'BTC', exchange=exchange, granularity=granularity)
+            save_history_file(i, 'BTC', 'BitTrex', 'histohour', data)
+        except:
+            print('Error in: %s' % i)
 
 
 def fetch_liquidity(fsym, tsym, exchange="All"):
@@ -189,7 +210,10 @@ if __name__ == '__main__':
     #print([data.keys()])
     #for i in data.keys():
     #    print('%s: %.f' % (i, data[i]))
-    print(get_top_pairs('BTC'))
+    #print(get_top_pairs('BTC'))
+    data = crypto_close('USD', 'GBP')
+    save_history_file('USD', 'GBP', 'Kraken', 'histominute', data)
+
 
 
 
